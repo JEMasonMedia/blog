@@ -1,0 +1,32 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "blog",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JEMasonMedia/blog-react.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "JEMasonMedia",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/JEMasonMedia/blog-react/issues"
+  },
+  "homepage": "https://github.com/JEMasonMedia/blog-react#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}
