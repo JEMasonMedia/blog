@@ -1,1 +1,14 @@
+.menu-bar-container {
+  min-width: 100vw;
+  /* display: flex; */
+}
 
+.footer-container {
+  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  height: 30px;
+}

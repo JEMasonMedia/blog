@@ -22,12 +22,13 @@ const app = express()
 // Middleware
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  })
-)
+
+const corsOptions = {
+  origin: 'http://localhost:3000/',
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions))
 
 //session configuration
 const mongoStore = MongoStore.create({
@@ -61,9 +62,9 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/userauth', require('./routes/users/userAuth'))
 // app.use('/stories', require('./routes/stories'))
 
-// app.get('/', (req, res) => {
-//   res.json({ msg: 'this worked' })
-// })
+app.get('/', (req, res) => {
+  res.json({ msg: 'this worked' })
+})
 
 const PORT = process.env.PORT || 4000
 

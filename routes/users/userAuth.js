@@ -62,10 +62,13 @@ router.get('/self', ensureAuth, (req, res, next) => {
 // logout
 router.post('/logout', (req, res) => {
   if (req.user) {
-    req.logout()
-    res.status(200).send({ msg: 'Logged Out' })
+    req.logOut()
+    res.clearCookie('connect.sid')
+    req.session.destroy((err) => {
+      res.send({ msg: 'Logged Out' })
+    })
   } else {
-    res.status(404).send({ msg: 'None to Log Out' })
+    res.status(200).send({ msg: 'None to Log Out' })
   }
 })
 
