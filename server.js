@@ -34,14 +34,16 @@ app.use(cors(corsOptions))
 const mongoStore = MongoStore.create({
   mongoUrl: process.env.MONGO_URI,
   collectionName: 'sessions',
-  ttl: 129600,
+  ttl: 60000,
 })
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     store: mongoStore,
-    resave: false,
+    cookie: { maxAge: 60000 },
+    rolling: true,
+    resave: true,
     saveUninitialized: false,
   })
 )

@@ -3,14 +3,15 @@ const router = express.Router()
 const User = require('../../database/models/User')
 const passport = require('../../passport')
 const { ensureAuth } = require('../../passport/auth')
+const Utils = require('../../utils/utils')
 
 // sign up
-router.post('/', (req, res) => {
+router.post('/register', (req, res) => {
   const { username, password } = req.body
   // ADD VALIDATION
   User.findOne({ username: username }, (err, user) => {
     if (err) {
-      res.status(400).json({ msg: 'Invalid Credentials', err })
+      res.status(400).json({ msg: 'Invalid Credentials' })
     } else if (user) {
       res.status(400).json({
         msg: 'Invalid Credentials',
@@ -21,14 +22,15 @@ router.post('/', (req, res) => {
         username: username,
         password: password,
       })
-      newUser.save((err, savedUser) => {
-        if (err) return res.status(500).json({ msg: 'Server Error', err })
-        var userInfo = {
-          username: savedUser.username,
-        }
+      newUser.save((err, user) => {
+        if (err) return res.status(500).json({ msg: 'Server Error' })
+
+        delete user.password
+        delete user.date
+
         res.status(200).json({
           msg: 'User Created',
-          userInfo,
+          user,
         })
       })
     }
@@ -38,14 +40,32 @@ router.post('/', (req, res) => {
 // login
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err)
+    if (err) {
+      res.clearCookie('connect.sid')
+      req.session.destroy((err) => {
+        res.status(304).json({ msg: 'Error Occurred' })
+      })
+      return next(err)
+    }
 
     if (!user) return res.status(400).json({ msg: 'Invalid Credentials' })
 
     req.logIn(user, (err) => {
-      if (err) return next(err)
+      if (err) {
+        res.clearCookie('connect.sid')
+        req.session.destroy((err) => {
+          res.status(304).json({ msg: 'Error Occurred' })
+        })
+        return next(err)
+      }
 
-      return res.redirect('/userauth/self')
+      delete user._doc.password
+      delete user._doc.date
+
+      if (req.body.rememberme)
+        req.session.cookie.maxAge = 90 * 24 * 60 * 60 * 1000
+
+      return res.status(200).json({ user })
     })
   })(req, res, next)
 })
@@ -65,10 +85,10 @@ router.post('/logout', (req, res) => {
     req.logOut()
     res.clearCookie('connect.sid')
     req.session.destroy((err) => {
-      res.send({ msg: 'Logged Out' })
+      res.status(200).send({ msg: 'Logged Out' })
     })
   } else {
-    res.status(200).send({ msg: 'None to Log Out' })
+    res.status(304).send({ msg: 'None to Log Out' })
   }
 })
 

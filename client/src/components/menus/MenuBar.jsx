@@ -1,10 +1,8 @@
-// import React, { useContext } from 'react'
-// import UserProvider from '../../contexts/UserProvider'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
+import { useAuthState } from '../../context/authcontext'
 
 const MenuBar = () => {
-  //   const userData = useContext(UserProvider.context)
-  // const loginType = !_.isEmpty(userData) ? _.find(data, d => d.name === userData.provider) : {};
+  const { isLogged } = useAuthState()
 
   return (
     <div className='menu-bar-container container-fluid p-0 m-0'>
@@ -66,28 +64,47 @@ const MenuBar = () => {
               </NavLink>
             </li>
           </ul>
-        </div>
-        <div className='float-right'>
-          <ul className='navbar-nav'>
-            <li className='nav-item'>
-              <NavLink
-                to='/login'
-                activeClassName='active'
-                className='nav-link'
-              >
-                Login
-              </NavLink>
-            </li>
-            <li className='nav-item'>
-              <NavLink
-                to='/register'
-                activeClassName='active'
-                className='nav-link'
-              >
-                Register
-              </NavLink>
-            </li>
-          </ul>
+          <div>
+            {isLogged ? (
+              <ul className='navbar-nav'>
+                <li className='nav-item'>
+                  <NavLink
+                    to='/profile'
+                    activeClassName='active'
+                    className='nav-link'
+                  >
+                    Profile
+                  </NavLink>
+                </li>
+                <li className='nav-item'>
+                  <Link to='/logout' className='nav-link'>
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+            ) : (
+              <ul className='navbar-nav'>
+                <li className='nav-item'>
+                  <NavLink
+                    to='/login'
+                    activeClassName='active'
+                    className='nav-link'
+                  >
+                    Login
+                  </NavLink>
+                </li>
+                <li className='nav-item'>
+                  <NavLink
+                    to='/register'
+                    activeClassName='active'
+                    className='nav-link'
+                  >
+                    Register
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </div>
         </div>
       </nav>
     </div>

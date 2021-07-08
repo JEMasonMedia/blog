@@ -1,38 +1,64 @@
-// import { useEffect, useState } from 'react'
-import { Router, Route } from 'react-router-dom'
+import { Router, Switch } from 'react-router-dom'
 import history from './history'
-import UserProvider from './contexts/UserProvider'
 
 import MenuBar from './components/menus/MenuBar'
 import Footer from './components/footer/Footer'
 
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Features from './pages/Features'
-import Pricing from './pages/Pricing'
-import About from './pages/About'
+import routes from './Config/routes.js'
+import { AuthProvider } from './context/authcontext/'
+import AppRoutes from './components/approutes'
 
 function App() {
   return (
-    <Router history={history}>
-      <UserProvider>
+    <AuthProvider>
+      <Router history={history}>
         <MenuBar />
-        {/* <Route path="/profile" component={Profile} /> */}
-
-        <Route path='/' exact strict component={Home} />
-        <Route path='/login' exact strict component={Login} />
-        <Route path='/register' exact strict component={Register} />
-        <Route path='/features' exact strict component={Features} />
-        <Route path='/pricing' exact strict component={Pricing} />
-        <Route path='/about' exact strict component={About} />
+        <Switch>
+          {routes.map((route) => (
+            <AppRoutes
+              exact
+              strict
+              key={route.path}
+              path={route.path}
+              component={route.component}
+              isPrivate={route.isPrivate}
+            />
+          ))}
+        </Switch>
         <Footer />
-      </UserProvider>
-    </Router>
+      </Router>
+    </AuthProvider>
   )
 }
 
 export default App
+
+// <Router history={history}>
+//   <UserProvider>
+//     <MenuBar />
+//     {/* <Route path="/profile" component={Profile} /> */}
+//     <Switch>
+//       <Route path='/' exact strict component={Home} />
+//       <Route path='/login' exact strict component={Login} />
+//       <Route path='/register' exact strict component={Register} />
+//       <Route path='/features' exact strict component={Features} />
+//       <Route path='/pricing' exact strict component={Pricing} />
+//       <Route path='/about' exact strict component={About} />
+//       <Route component={notFound404} />
+//     </Switch>
+//     <Footer />
+//   </UserProvider>
+// </Router>
+
+// import UserProvider from './context/UserProvider'
+
+// import Home from './pages/Home'
+// import Login from './pages/Login'
+// import Register from './pages/Register'
+// import Features from './pages/Features'
+// import Pricing from './pages/Pricing'
+// import About from './pages/About'
+// import notFound404 from './pages/notFound404'
 
 // const [temp, setTemp] = useState(null)
 
